@@ -1,0 +1,3 @@
+1:Saksham:1st:Btech Cse:9.67
+2:Aditya:2nd:Bsc Ai:8.56
+3:priyanshu:1st:Btech:5.65
