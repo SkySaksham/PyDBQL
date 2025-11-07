@@ -59,12 +59,21 @@ def get_data(database_name,file_name) :
     table = [head_size[0]] + get_content(database_name,file_name)
     return table,head_size[1]
 
+def get_rows(database_name,table_name,column=None,entry=None) :
 
-table,size= get_data("Sky","student")
+    if (column==None) or (entry == None) :
+        return get_data (database_name,table_name)
+    
 
-draw_table(table,size)
+    row_head , width = get_header_row_size (database_name,table_name)
+    index = row_head.index(column)
+    data = [] 
+    with open(f"{database_name}/tables/{table_name}.txt") as file :
+        for line in file :
+            line = line.replace("\n","")
+            row_list = line.split(":")
+            if row_list[index] == entry :
+                data.append(row_list)
+    return [row_head] + data , width
 
-table , size = get_data("Sky","Kelp")
-e = get_blank_row(size)
-table += [e] + [e]
-draw_table(table,size)
+table,width = get_rows("Sky","users","Sex","M")

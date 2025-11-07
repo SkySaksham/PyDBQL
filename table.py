@@ -21,9 +21,10 @@ def create_table(database_name,name,header,column_width) :
     with open(f"{database_name}/tables/{name}.txt","w") as file :
         return
 
+def add_entries(database_name,file_name,row) :
+    with open(f"{database_name}/tables/{file_name}.txt","a") as file :
+        file.writelines([row+"\n"])
 
-h = "hi:4:my:3:ABCD:6"
-nm = "Kelp"
-hd,sz = table_header(h)
 
-create_table("Sky",nm,hd,sz)
+
+
