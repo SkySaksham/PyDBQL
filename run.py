@@ -4,6 +4,3 @@ import table as t
 import create_db as c
 
 
-table,width = m.get_rows("Sky","users","Name","Saksham")
-m.draw_table(table,width)
-
