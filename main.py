@@ -1,13 +1,13 @@
 def get_content (database_name,filename) :
     table = []
-    with open(f"{database_name}/tables/{filename}.txt","r+") as data :
+    with open(f"{database_name}/tables/{filename}.txt","r") as data :
         for line in data :
             line=line.replace("\n","")
             row = line.split(":")
             table.append(row)
     return table
 
-def get_header_row_size(database_name,table_name) :
+def get_table_info(database_name,table_name) :
 
     rowhead_size = [["Row Head"],["Size"]]
 
@@ -55,7 +55,7 @@ def draw_table (table,size) :
     table_edge(size)
 
 def get_data(database_name,file_name) :
-    head_size = get_header_row_size(database_name,file_name)
+    head_size = get_table_info(database_name,file_name)
     table = [head_size[0]] + get_content(database_name,file_name)
     return table,head_size[1]
 
@@ -65,7 +65,7 @@ def get_rows(database_name,table_name,column=None,entry=None) :
         return get_data (database_name,table_name)
     
 
-    row_head , width = get_header_row_size (database_name,table_name)
+    row_head , width = get_table_info (database_name,table_name)
     index = row_head.index(column)
     data = [] 
     with open(f"{database_name}/tables/{table_name}.txt") as file :
