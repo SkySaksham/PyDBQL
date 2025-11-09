@@ -73,8 +73,11 @@ def table_info (raw_string) :   # "Sno:[(key)]int[(<len>)]:name:()str[<len>]:mon
             
     return names , types , sizes , key
 
-a = "sno:int(14):Name:()str:balance:()()float"
-a="sno:int(4):Name:str(12):balance:float"
+
+a="sno:int(4):Name:str(12):balance:float(1)"
 
 try : print(table_info(a))
 except Exception as e : print(e)
+
+
+

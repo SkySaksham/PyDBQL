@@ -28,3 +28,5 @@ def drop_db(name,space) :
          
         shutil.rmtree(name)
         print (space+f" DATABASE '{name}' DELETED SUCCESSFULLY !!")
+
+create_db("Batch22")
