@@ -22,6 +22,7 @@ def create_table(database_name,name,data) :
 
     table_data = [f"{name}"] 
     
+    if key == [] : table_data[0] += "\n"
     for i in key :
         if i != "" :      
             table_data[0]+= ":"
@@ -31,7 +32,7 @@ def create_table(database_name,name,data) :
 
     table_data += convert(data)
 
-    print(table_data)
+    #print(table_data)
     base_direc = Path(__file__).parent
     path = (base_direc/f"../db/{database_name}")
 

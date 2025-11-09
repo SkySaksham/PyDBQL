@@ -1,4 +1,4 @@
-
+from pathlib import Path
 
 def table_info (raw_string) :   # "Sno:[(key)]int[(<len>)]:name:()str[<len>]:money:[(key)]float[(<len>)]"
     columns = raw_string.split(":")
@@ -74,10 +74,84 @@ def table_info (raw_string) :   # "Sno:[(key)]int[(<len>)]:name:()str[<len>]:mon
     return names , types , sizes , key
 
 
-a="sno:int(4):Name:str(12):balance:float(1)"
+def fetch_table_info(database_name,file_name) :
+    base_direc = (Path(__file__).parent)
+    data = []
+    with open(base_direc/f"../db/{database_name}/tables.txt") as table_info :
+        flag = False 
+        for index,line in enumerate(table_info,start=1) :
+            if (index%4) == 1 :
+                if flag : break
+                line = line.replace("\n","")
+                content = line.split(":")
+                if content[0] != file_name : continue
+                data.append(content)
+                flag = True
+            elif flag :
+                line = line.replace("\n","")
+                content = line.split(":")
+                data.append(content)
+    if data == [] : raise Exception (f"NO TABLE NAMED '{file_name}' IS PRESENT !!")
+    return data
 
-try : print(table_info(a))
-except Exception as e : print(e)
+def entry_validation(database_name, file_name, x):
+    table_inf = fetch_table_info(database_name, file_name)
+    key = table_inf[0][1:-1]
+    size = len(table_inf[1])
+    name = table_inf[1]
+    datatype = table_inf[2]
 
+    path = (Path(__file__).parent) / f"../db/{database_name}/tables/{file_name}.txt"
+
+    if key != []:
+        indexes = []
+        keys = []
+        for i in key:
+            indexes.append(name.index(i))
+            keys.append(set())
+
+        with open(path) as data:
+            for line in data:
+                line = line.strip()
+                if not line:
+                    continue
+                content = line.split(":")
+                for i in range(len(indexes)):
+                    keys[i].add(content[indexes[i]])
+
+    for entry in x:
+        entry = entry.split(":")
+        if len(entry) != size:
+            raise Exception(f"INVALID SYNTAX !! '{entry}' MISMATCHED NUMBER OF COLUMNS")
+
+        # Check datatype validity
+        for j in range(size):
+            if datatype[j] == "int":
+                if not entry[j].lstrip("-").isdigit():
+                    raise Exception(f"INVALID DATA TYPE !! COLUMN '{name[j]}' EXPECTS INT")
+            elif datatype[j] == "float":
+                try:
+                    float(entry[j])
+                except:
+                    raise Exception(f"INVALID DATA TYPE !! COLUMN '{name[j]}' EXPECTS FLOAT")
+            elif datatype[j] == "str":
+                if not isinstance(entry[j], str):
+                    raise Exception(f"INVALID DATA TYPE !! COLUMN '{name[j]}' EXPECTS STRING")
+
+        # Check for duplicate keys
+        for k in range(len(key)):
+            value = entry[indexes[k]]
+            if value in keys[k]:
+                raise Exception(f"DUPLICATE KEY FOUND !! VALUE '{value}' FOR KEY '{key[k]}' ALREADY EXISTS")
+            keys[k].add(value)
+
+def add_entries(database_name,file_name,row) :
+
+    entry_validation(database_name,file_name,row)
+    base_direc = (Path(__file__).parent)
+    for i in range(len(row)) : row[i]+="\n"
+
+    with open(base_direc/f"../db/{database_name}/tables/{file_name}.txt","a") as file :
+        file.writelines(row)
 
 

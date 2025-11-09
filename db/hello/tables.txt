@@ -1,0 +1,4 @@
+user:sno:Name
+sno:Name:balance
+int:str:float
+4:12:14
