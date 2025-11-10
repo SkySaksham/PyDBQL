@@ -11,8 +11,8 @@
 
 
 import os
-import legacy_code.main as mp
-import legacy_code.create_db as cd
+import main as mp
+import create_db as cd
 
 
 command = ["checkout","get","create","drop","show"]

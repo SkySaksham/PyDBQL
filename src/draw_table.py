@@ -65,7 +65,7 @@ a = [['sno', 'Name', 'balance'], [1, 'Saksham', 121.3], [2, 'user2', 1221.0], [3
 draw_table([head]+data,width) '''
 
 def draw(database_name,table_name,column=None,entry=None) :
-    head , data , width = fetch_rows(database_name,table_name,column=None,entry=None)
+    head , data , width = fetch_rows(database_name,table_name,column,entry)
     draw_table([head]+data,width)
 
-#draw("hello","user")
+#draw("hello","user","Name","Saksham")
