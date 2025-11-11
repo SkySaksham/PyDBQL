@@ -1,5 +1,5 @@
 from pathlib import Path
-import add_data as ad  
+from src import add_data as ad  
 
 def draw_table (table,size) :
 

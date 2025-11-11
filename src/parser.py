@@ -2,19 +2,26 @@
 
 # commands so far
 
-# current commands
-# checkout:<database_name>
+# checkout :<database_name>
 # checkout 
-# drop:database:<database_name>
-# drop:<database_name>
-# show:database
+# drop :database :<database_name>
+# drop :<database_name>
+# show :database
+# get :<table_name>
+# get :<table_name :where :<column_name> :is :<entry>
 
+import sys
 from pathlib import Path
 import os
-import add_data as ad
-import create_table as ct
-import draw_table as dt
-import drop_and_create_db as cd
+
+if __name__ == "__main__":
+    sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+
+from src import add_data as ad
+from src import create_table as ct
+from src import draw_table as dt
+from src import drop_and_create_db as cd
 
 
 command = ["checkout","get","create","drop","show"]
@@ -50,40 +57,49 @@ def initiate(name) :
     global database
     database = name
     print (f"{space} SELECTED DATABASE : {name} ")
-    print ()
+    #print ()
 
 def check_db (database) : 
     if database == None : print (space,"NO DATABASE SELECTED !!")
     else : print (space,f"YOU ARE ON DATABASE : '{database}'")
-    print()
+    #print()
 
-def get_table(name) :
+def get_table(name,column=None,entry=None) :
     if database == None : print (space,"NO DATABSE SELECTED YET !! ABORTED !!")
     else :
-        dt.draw(database,name)
+        dt.draw(database,name,column,entry)
 
 
 def parser(query_string) :
-    query = query_string.split(":")
+    query = query_string.split(" :")
 
     if query [0] == command [0] :
         if len(query) == 1 : check_db(database)
         else : initiate(query[1])
-    if query [0] == command [1] :
-        get_table(query[1])
-    if query [0] == command [2] :
+    elif query [0] == command [1] :
+        try :
+            if len(query) == 1 : raise Exception("TABLE NOT SELECTED")
+            else : 
+                if len(query) == 2 : dt.draw(database,query[1])
+                elif (len(query) == 6) and query[2] == "where" and query[4]=="is" : dt.draw(database,query[1],query[3],query[5])
+                else : raise Exception(f"INVALID SYNTAX :: '{query_string}'")
+        except Exception as e : print(e)
+    elif query [0] == command [2] :
         if query[1] == command_2nd[0] :
             try : cd.create_db(query[2],space)
             except Exception as e : print(e)
-    if query [0] == command [3] :
+    elif query [0] == command [3] :
         if query[1] == command_2nd[0] :
             try : cd.drop_db(query[2],space)
             except Exception as e : print(e)
-    if query [0] == command [4] :
+    elif query [0] == command [4] :
         if query[1] == command_2nd[0] : get_database()
 
+    else : raise Exception(f"INVALID SYNTAX :: '{query_string}'")
 
-while True :
-    print ()
-    query = input("PyDBQL>> ")
-    parser(query)
+def run() :
+    while True :
+        print ()
+        query = input("PyDBQL>> ")
+        try : parser(query)
+        except Exception as e : print(e)

@@ -16,6 +16,7 @@ except Exception as e : print (e)
 
 
 
+
 #data=ad.table_info(a)
 #db.create_db("hello")
 #ct.create_table("hello",table,data)
