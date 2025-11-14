@@ -7,9 +7,9 @@ def convert(x) : #(["",""],["",""],[,,],[]) --> [" "," "," "] , for writelines()
             element = ""
             if i == x[-1] : pass
             if i != x[-1] :
-                for j in i :
+                for jindex,j in enumerate(i) :
                         element+=str(j)
-                        if j != i[-1] : element += ":"
+                        if jindex != len(i)-1 : element += ":"
                         else : element+="\n"
                 res.append(element)
         return res
@@ -21,9 +21,12 @@ def create_table(database_name,name,data) :
     key = data [3]
 
     table_data = [f"{name}"] 
+
+    #print (data)
     
     if key == [] : table_data[0] += "\n"
     for i in key :
+
         if i != "" :      
             table_data[0]+= ":"
             table_data[0]+=i
@@ -33,6 +36,7 @@ def create_table(database_name,name,data) :
     table_data += convert(data)
 
     #print(table_data)
+
     base_direc = Path(__file__).parent
     path = (base_direc/f"../db/{database_name}")
 

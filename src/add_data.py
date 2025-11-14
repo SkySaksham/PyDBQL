@@ -3,7 +3,7 @@ from pathlib import Path
 def table_info (raw_string) :   # "Sno:[(key)]int[(<len>)]:name:()str[<len>]:money:[(key)]float[(<len>)]"
     columns = raw_string.split(":")
 
-    data_types = ["int","str","float"] 
+    #data_types = ["int","str","float"] 
     names , types , sizes , key = [],[],[],[]
 
     for i in range (0,len(columns),2) :
@@ -11,7 +11,7 @@ def table_info (raw_string) :   # "Sno:[(key)]int[(<len>)]:name:()str[<len>]:mon
         
     for i in range(1,len(columns),2) :
         chunk = columns[i]
-        data = [False,"",""]
+        data = [False,"",14]
         if chunk.count("(") != chunk.count(")") : 
                 raise Exception(f"INVALID SYNTAX '{chunk}' : CLOSE BRACKETS PROPERLY !! ")
         flag = chunk.count("(")

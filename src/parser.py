@@ -25,7 +25,7 @@ from src import drop_and_create_db as cd
 
 
 command = ["checkout","get","create","drop","show"]
-command_2nd = ["database"]
+command_2nd = ["database","table"]
 
 
 
@@ -69,6 +69,15 @@ def get_table(name,column=None,entry=None) :
     else :
         dt.draw(database,name,column,entry)
 
+def add_table(database,table_name,table_data_raw_string) :
+    if database == None : print (space,"NO DATABSE SELECTED YET !! ABORTED !!")
+
+    else :
+        raw_table_data = table_data_raw_string[1:-1]
+
+        data = ad.table_info(raw_table_data)
+        ct.create_table(database,table_name,data)
+
 
 def parser(query_string) :
     query = query_string.split(" :")
@@ -83,17 +92,29 @@ def parser(query_string) :
                 if len(query) == 2 : dt.draw(database,query[1])
                 elif (len(query) == 6) and query[2] == "where" and query[4]=="is" : dt.draw(database,query[1],query[3],query[5])
                 else : raise Exception(f"INVALID SYNTAX :: '{query_string}'")
+
         except Exception as e : print(e)
     elif query [0] == command [2] :
         if query[1] == command_2nd[0] :
             try : cd.create_db(query[2],space)
             except Exception as e : print(e)
+        elif query[1] == command_2nd[1] :
+            if len(query)==4 :
+                table_name=query[2]
+                add_table(database,table_name,query[3])
+                print(space,f"Table {table_name} CREATED SUCCESFULLY !!")
+            else :raise Exception(f"INVALID SYNTAX :: '{query_string}'")
+        else :raise Exception(f"INVALID SYNTAX :: '{query_string}'")
+    
     elif query [0] == command [3] :
         if query[1] == command_2nd[0] :
             try : cd.drop_db(query[2],space)
             except Exception as e : print(e)
+        else :raise Exception(f"INVALID SYNTAX :: '{query_string}'")
+
     elif query [0] == command [4] :
         if query[1] == command_2nd[0] : get_database()
+        else :raise Exception(f"INVALID SYNTAX :: '{query_string}'")
 
     else : raise Exception(f"INVALID SYNTAX :: '{query_string}'")
 
