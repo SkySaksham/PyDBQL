@@ -30,6 +30,7 @@ command_2nd = ["database","table"]
 
 
 database = None
+all_tables = []
 space = "        "
 
 def get_database() :
@@ -50,12 +51,39 @@ def get_database() :
     dt.draw_table(table,width_list)
 
 
-    
+def get_all_tables(database) :
 
+    all_tables = []
+
+    base_direc = (Path(__file__).parent)
+    with open(base_direc/f"../db/{database}/tables.txt") as metadata :
+        for index,line in enumerate(metadata,start=1) :
+            if index%4 == 1 : 
+                line.strip("\n")
+                all_tables.append(line.split(":")[0])
+    
+    return all_tables
+
+#print(get_all_tables("hello"))
+
+
+
+def show_table(x) :
+    if database == None : print (space,"NO DATABASE SELECTED !!")
+    else :
+        size = [6,14]
+        data = [["Sno.","Table"]]
+        for i,j in enumerate(x,start=1) :
+            data.append([str(i),j])
+    dt.draw_table(data,size)
 
 def initiate(name) :
     global database
+    global all_tables
     database = name
+    all_tables=get_all_tables(database)
+
+    
     print (f"{space} SELECTED DATABASE : {name} ")
     #print ()
 
@@ -70,9 +98,11 @@ def get_table(name,column=None,entry=None) :
         dt.draw(database,name,column,entry)
 
 def add_table(database,table_name,table_data_raw_string) :
+    global all_tables
     if database == None : print (space,"NO DATABSE SELECTED YET !! ABORTED !!")
-
+    elif table_name in all_tables : raise Exception (f"TABLE '{table_name}' IS ALREADY PRESENT IN '{database}'")
     else :
+        all_tables+=[table_name]
         raw_table_data = table_data_raw_string[1:-1]
 
         data = ad.table_info(raw_table_data)
@@ -113,7 +143,8 @@ def parser(query_string) :
         else :raise Exception(f"INVALID SYNTAX :: '{query_string}'")
 
     elif query [0] == command [4] :
-        if query[1] == command_2nd[0] : get_database()
+        if query[1] == command_2nd[0]+"s" : get_database()
+        elif query[1] == command_2nd[1]+"s": show_table(all_tables)
         else :raise Exception(f"INVALID SYNTAX :: '{query_string}'")
 
     else : raise Exception(f"INVALID SYNTAX :: '{query_string}'")
@@ -124,3 +155,4 @@ def run() :
         query = input("PyDBQL>> ")
         try : parser(query)
         except Exception as e : print(e)
+
