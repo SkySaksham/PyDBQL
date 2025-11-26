@@ -9,6 +9,8 @@
 # show :database
 # get :<table_name>
 # get :<table_name :where :<column_name> :is :<entry>
+# create :<table_name> :(<col1:[(key)]<type>[(size)]>; . . .)
+# insert :<table_name> :(<entry1>;<entry<2>;...)
 
 import sys
 from pathlib import Path
@@ -24,8 +26,6 @@ from src import draw_table as dt
 from src import drop_and_create_db as cd
 
 
-command = ["checkout","get","create","drop","show"]
-command_2nd = ["database","table"]
 
 
 
@@ -66,6 +66,35 @@ def get_all_tables(database) :
 
 #print(get_all_tables("hello"))
 
+def add_entries(database,table_name,data) :
+    if database == None : print (space,"NO DATABASE SELECTED !!")
+    else :
+        ad.add_entries(database,table_name,data) 
+
+
+
+def show_table_data (database,table_name) :
+    if database == None : print (space,"NO DATABASE SELECTED !!")
+    else :
+        row_head = ad.fetch_table_info(database,table_name)
+        #print(row_head)
+        data = [["Columm","Type","Size","key"]]
+        for i in range (0,len((row_head)[1])) :
+            b =[]
+            for j in range (1,len(row_head)) :
+                b.append(row_head[j][i])
+                #print (b)
+            b.append("")
+            data.append(b)
+        if len(row_head[0]) > 1 :
+            for i in range (1,len(row_head[0])) :
+                for j in range (1,len(data)) :
+                    if data[j][0] == row_head[0][i] : 
+                        data[j][3] = "TRUE"
+                        break
+        size = [12,6,8,6]
+        dt.draw_table(data,size)
+#show_table_data("hello","user")
 
 
 def show_table(x) :
@@ -75,7 +104,7 @@ def show_table(x) :
         data = [["Sno.","Table"]]
         for i,j in enumerate(x,start=1) :
             data.append([str(i),j])
-    dt.draw_table(data,size)
+        dt.draw_table(data,size)
 
 def initiate(name) :
     global database
@@ -109,12 +138,21 @@ def add_table(database,table_name,table_data_raw_string) :
         ct.create_table(database,table_name,data)
 
 
+command = ["checkout","get","create","drop","show","insert"]
+command_2nd = ["database","table"]
+
+
+
 def parser(query_string) :
+    query_string = query_string.lstrip(" ")
+    query_string = query_string.rstrip(" ")
+
     query = query_string.split(" :")
 
     if query [0] == command [0] :
         if len(query) == 1 : check_db(database)
         else : initiate(query[1])
+        
     elif query [0] == command [1] :
         try :
             if len(query) == 1 : raise Exception("TABLE NOT SELECTED")
@@ -145,7 +183,24 @@ def parser(query_string) :
     elif query [0] == command [4] :
         if query[1] == command_2nd[0]+"s" : get_database()
         elif query[1] == command_2nd[1]+"s": show_table(all_tables)
+        elif query[1] == command_2nd[1] :
+            if len(query)==3 : show_table_data(database,query[2])
+            else :raise Exception(f"INVALID SYNTAX :: '{query_string}'") 
         else :raise Exception(f"INVALID SYNTAX :: '{query_string}'")
+
+    elif query [0] == command[5] :
+        if database == None : print (space,"NO DATABASE SELECTED !!")
+        elif query[1] not in all_tables : raise Exception (f"TABLE '{table_name}' IS NOT PRESENT IN DATABASE {database}")
+        elif len(query) != 3 : raise Exception(f"INVALID SYNTAX :: '{query_string}'")
+        else :
+            c = query[2]
+            c=c.lstrip("(")
+            c=c.rstrip(")")
+            data = c.split(" ;")
+            try : add_entries(database,query[1],data)
+            finally : 
+                print (space,f"UPDATED TABLE '{query[1]}' :\n")
+                get_table(query[1])
 
     else : raise Exception(f"INVALID SYNTAX :: '{query_string}'")
 

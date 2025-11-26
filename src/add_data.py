@@ -96,7 +96,7 @@ def fetch_table_info(database_name,file_name) :
 
 def entry_validation(database_name, file_name, x):
     table_inf = fetch_table_info(database_name, file_name)
-    key = table_inf[0][1:-1]
+    key = table_inf[0][1::]
     size = len(table_inf[1])
     name = table_inf[1]
     datatype = table_inf[2]
