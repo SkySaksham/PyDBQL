@@ -1,4 +1,6 @@
 from pathlib import Path
+from src.encrypt_decrypt import encryption , decryption
+
 
 def table_info (raw_string) :   # "Sno:[(key)]int[(<len>)]:name:()str[<len>]:money:[(key)]float[(<len>)]"
     columns = raw_string.split(":")
@@ -80,15 +82,15 @@ def fetch_table_info(database_name,file_name) :
     with open(base_direc/f"../db/{database_name}/tables.txt") as table_info :
         flag = False 
         for index,line in enumerate(table_info,start=1) :
+            line = line.strip()
+            line = decryption(line)
             if (index%4) == 1 :
                 if flag : break
-                line = line.replace("\n","")
                 content = line.split(":")
                 if content[0] != file_name : continue
                 data.append(content)
                 flag = True
             elif flag :
-                line = line.replace("\n","")
                 content = line.split(":")
                 data.append(content)
     if data == [] : raise Exception (f"NO TABLE NAMED '{file_name}' IS PRESENT !!")
@@ -113,6 +115,7 @@ def entry_validation(database_name, file_name, x):
         with open(path) as data:
             for line in data:
                 line = line.strip()
+                line = decryption(line)
                 if not line:
                     continue
                 content = line.split(":")
@@ -120,6 +123,7 @@ def entry_validation(database_name, file_name, x):
                     keys[i].add(content[indexes[i]])
 
     for entry in x:
+        print (entry)
         entry = entry.split(":")
         if len(entry) != size:
             raise Exception(f"INVALID SYNTAX !! '{entry}' MISMATCHED NUMBER OF COLUMNS")
@@ -128,6 +132,7 @@ def entry_validation(database_name, file_name, x):
         for j in range(size):
             if datatype[j] == "int":
                 if not entry[j].lstrip("-").isdigit():
+                    print(entry[j].lstrip("-"))
                     raise Exception(f"INVALID DATA TYPE !! COLUMN '{name[j]}' EXPECTS INT")
             elif datatype[j] == "float":
                 try:
@@ -149,7 +154,9 @@ def add_entries(database_name,file_name,row) :
 
     entry_validation(database_name,file_name,row)
     base_direc = (Path(__file__).parent)
-    for i in range(len(row)) : row[i]+="\n"
+    for i in range(len(row)) : row[i]= encryption(row[i]) + "\n"
+
+    #rows ---> [" "," "]
 
     with open(base_direc/f"../db/{database_name}/tables/{file_name}.txt","a") as file :
         file.writelines(row)

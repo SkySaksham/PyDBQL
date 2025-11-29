@@ -15,6 +15,7 @@
 import sys
 from pathlib import Path
 import os
+from src.encrypt_decrypt import encryption , decryption
 
 if __name__ == "__main__":
     sys.path.append(str(Path(__file__).resolve().parent.parent))
@@ -58,8 +59,9 @@ def get_all_tables(database) :
     base_direc = (Path(__file__).parent)
     with open(base_direc/f"../db/{database}/tables.txt") as metadata :
         for index,line in enumerate(metadata,start=1) :
+            line = line.strip()
+            line = decryption(line)
             if index%4 == 1 : 
-                line.strip("\n")
                 all_tables.append(line.split(":")[0])
     
     return all_tables
