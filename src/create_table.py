@@ -1,4 +1,7 @@
+##encryption done
+
 from pathlib import Path
+from src.encrypt_decrypt import encryption
 
 
 def convert(x) : #(["",""],["",""],[,,],[]) --> [" "," "," "] , for writelines()
@@ -30,8 +33,12 @@ def create_table(database_name,name,data) :
         if i != "" :      
             table_data[0]+= ":"
             table_data[0]+=i
-            if i == key[-1] : table_data[0] += "\n"
-        elif len(key)==1 or i == key[-1]: table_data[0] += "\n"
+            if i == key[-1] : 
+                #table_data[0] = encryption(table_data[0]) 
+                table_data[0] += "\n"
+        elif len(key)==1 or i == key[-1]:
+                #table_data[0] = encryption(table_data[0]) 
+                table_data[0] += "\n"
 
     table_data += convert(data)
 
@@ -40,6 +47,9 @@ def create_table(database_name,name,data) :
     base_direc = Path(__file__).parent
     path = (base_direc/f"../db/{database_name}")
 
+    
+    for i in range(len(table_data)) :
+        table_data[i] = encryption(table_data[i].strip("\n"))+"\n"
 
     with open(path/"tables.txt","a") as tables :
         tables.writelines(table_data)

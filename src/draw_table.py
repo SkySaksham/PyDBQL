@@ -1,5 +1,6 @@
 from pathlib import Path
 from src import add_data as ad  
+from src.encrypt_decrypt import encryption , decryption
 
 def draw_table (table,size) :
 
@@ -41,7 +42,8 @@ def fetch_rows(database_name,table_name,column=None,entry=None) :
         table=[]
         with open(path/f"../db/{database_name}/tables/{table_name}.txt") as file :
             for line in file :
-                line=line.replace("\n","")
+                line = line.strip()
+                line = decryption(line)
                 row = line.split(":")
                 table.append(row)
         data_type_conversion(table,datatypes)
@@ -51,7 +53,8 @@ def fetch_rows(database_name,table_name,column=None,entry=None) :
     data = [] 
     with open(path/f"../db/{database_name}/tables/{table_name}.txt") as file :
         for line in file :
-            line = line.replace("\n","")
+            line = line.strip()
+            line = decryption(line)
             row_list = line.split(":")
             if row_list[index] == entry :
                 data.append(row_list)
