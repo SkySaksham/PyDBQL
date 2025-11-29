@@ -1,84 +1,136 @@
-PyDBQL — A Lightweight Database CLI in Python
-=============================================
+# PyDBQL — Python-Based Encrypted Database & Query Language
 
-PyDBQL (Python Database Query Language) is a custom-built command-line interface designed to simulate database operations using simple commands. It allows you to create, manage, and interact with databases stored in plain text — all through your own SQL-like syntax.
+PyDBQL is a lightweight, file-based encrypted database engine written in Python.  
+It supports creating databases, creating tables, inserting records, viewing data,  
+and running simple queries with a custom human-readable query language.
 
-------------------------------------------------------------
-Features
-------------------------------------------------------------
-- Command-line based mini query language
-- Create, drop, and view databases easily
-- Fetch and display tables dynamically
-- Works entirely on local files
-- Interactive prompt:
+---
 
-  PyDBQL>>
+## 🚀 Features
 
-------------------------------------------------------------
-Commands Supported
-------------------------------------------------------------
-Command                                | Example
--------------------------------------- | -----------------------------
-checkout :<database_name>              | checkout :students
-checkout                               | (shows current database)
-create :database :<name>               | create :database :library
-drop :database :<name>                 | drop :database :testdb
-show :database                         | show :database
-get :<table_name>                      | get :students
-get :<table_name> :where :<column> :is :<value> | get :students :where :class :is :12A
+- 🔐 Encrypted data storage (via `encrypt_decrypt.py`)
+- 📁 Create, drop, and switch databases
+- 🧱 Create tables with typed columns, sizes, and keys
+- ➕ Insert rows into tables
+- 🔍 Retrieve tables with optional filtering (`WHERE <column> IS <value>`)
+- 📜 Display all databases and all tables
+- 💻 Interactive command shell: `PyDBQL>>`
 
-------------------------------------------------------------
-Project Structure
-------------------------------------------------------------
-PyDBQL/
-├── db/                   (Database folders and files)
-├── src/                  (Source code modules)
-│   ├── parser.py
-│   ├── add_data.py
-│   ├── create_table.py
-│   ├── draw_table.py
-│   └── drop_and_create_db.py
-├── main.py               (CLI entry point)
-├── pydbql.bat            (Windows launcher)
-└── README.md             (Documentation)
+---
 
-------------------------------------------------------------
-How to Run
-------------------------------------------------------------
-Option 1 — From the project folder
-    cd C:\Users\Saksham Yadav\Desktop\Projects\PyDBQL
-    python main.py
+## 📘 Supported Commands
 
-Option 2 — From anywhere (recommended)
-    pydbql
+### **1. Database Commands**
+```
+checkout
+checkout :<database_name>
+create :database :<database_name>
+drop :database :<database_name>
+show :databases
+```
 
-------------------------------------------------------------
-Example Session
-------------------------------------------------------------
-PyDBQL>> create :database :school
-        DATABASE 'school' CREATED SUCCESSFULLY
+### **2. Table Commands**
+```
+show :tables
+show :table :<table_name>
+get :<table_name>
+get :<table_name> :where :<column> :is :<entry>
+create :table :<name> :(<col:type[size]; ...>)
+insert :<table_name> :(<entry1> ;<entry2> ;...)
+```
 
-PyDBQL>> checkout :school
-        SELECTED DATABASE : school
+### Example — Create a Table
+```
+create :table :users :(id:key int; name:str[30]; age:int)
+```
 
-PyDBQL>> show :database
-+------+-----------+----------+
-| S.no | Database  | Selected |
-+------+-----------+----------+
-| 1    | school    | TRUE     |
-+------+-----------+----------+
+---
 
-------------------------------------------------------------
-Requirements
-------------------------------------------------------------
-- Python 3.8 or higher
-- Works on Windows (CLI compatible via pydbql.bat)
+## 📁 Project Structure
 
-------------------------------------------------------------
-Future Plans
-------------------------------------------------------------
-- Add insert, update, and delete commands
-- Support nested query operations
-- Add JSON and CSV export options
-- Build a cross-platform launcher (Linux/Mac)
+```
+src/
+    add_data.py
+    create_table.py
+    draw_table.py
+    drop_and_create_db.py
+    encrypt_decrypt.py
 
+db/
+    (Encrypted databases stored here)
+
+main.py
+README.md
+```
+
+---
+
+## ▶️ How to Run
+
+Run the main program:
+
+```
+python main.py
+```
+
+You will enter the interactive shell:
+
+```
+PyDBQL>>
+```
+
+---
+
+## 🧪 Examples
+
+### Create and switch to a database
+```
+create :database :college
+checkout :college
+```
+
+### Create a table
+```
+create :table :students :(id:key int; name:str[20]; age:int)
+```
+
+### Insert data
+```
+insert :students :(101 ;"Saksham" ;19)
+```
+
+### View table
+```
+get :students
+```
+
+### Filter rows
+```
+get :students :where :name :is :"Saksham"
+```
+
+---
+
+## 🔐 Encryption
+
+Table metadata and row entries are stored in encrypted form.  
+Encryption/decryption functions live inside:
+
+```
+src/encrypt_decrypt.py
+```
+
+---
+
+## 🎯 Why PyDBQL?
+
+- Learn how databases work internally  
+- Custom query parsing + encryption + file handling  
+- Perfect for portfolios and learning system design  
+- Fully written in Python  
+
+---
+
+## 📄 License
+
+MIT License (optional — add if needed)
