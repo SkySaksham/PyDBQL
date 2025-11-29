@@ -1,50 +1,54 @@
-PyDBQL — Python-Based Encrypted Database & Query Language
-=========================================================
+# PyDBQL — Python-Based Encrypted Database & Query Language
 
-PyDBQL is a lightweight, file-based encrypted database engine written in Python.
-It supports creating databases, creating tables, inserting records, viewing data, 
+PyDBQL is a lightweight, file-based encrypted database engine written in Python.  
+It supports creating databases, creating tables, inserting records, viewing data,  
 and running simple queries with a custom human-readable query language.
 
----------------------------------------------------------
-FEATURES
----------------------------------------------------------
-• Encrypted data storage (via encrypt_decrypt.py)
-• Create, drop, and switch databases
-• Create tables with typed columns, sizes, and keys
-• Insert rows into tables
-• Retrieve tables with optional filtering (WHERE <column> IS <value>)
-• Display all databases and all tables
-• Interactive command shell: PyDBQL>>
+---
 
----------------------------------------------------------
-SUPPORTED COMMANDS
----------------------------------------------------------
+## 🚀 Features
 
-1. Database Commands:
----------------------
+- 🔐 Encrypted data storage (via `encrypt_decrypt.py`)
+- 📁 Create, drop, and switch databases
+- 🧱 Create tables with typed columns, sizes, and keys
+- ➕ Insert rows into tables
+- 🔍 Retrieve tables with optional filtering (`WHERE <column> IS <value>`)
+- 📜 Display all databases and all tables
+- 💻 Interactive command shell: `PyDBQL>>`
+
+---
+
+## 📘 Supported Commands
+
+### **1. Database Commands**
+```
 checkout
 checkout :<database_name>
 create :database :<database_name>
 drop :database :<database_name>
 show :databases
+```
 
-2. Table Commands:
-------------------
+### **2. Table Commands**
+```
 show :tables
 show :table :<table_name>
 get :<table_name>
 get :<table_name> :where :<column> :is :<entry>
 create :table :<name> :(<col:type[size]; ...>)
 insert :<table_name> :(<entry1> ;<entry2> ;...)
+```
 
-Example:
---------
+### Example — Create a Table
+```
 create :table :users :(id:key int; name:str[30]; age:int)
+```
 
+---
 
----------------------------------------------------------
-PROJECT STRUCTURE
----------------------------------------------------------
+## 📁 Project Structure
+
+```
 src/
     add_data.py
     create_table.py
@@ -56,59 +60,77 @@ db/
     (Encrypted databases stored here)
 
 main.py
-README.txt
+README.md
+```
 
+---
 
----------------------------------------------------------
-HOW TO RUN
----------------------------------------------------------
+## ▶️ How to Run
+
 Run the main program:
 
-    python main.py
+```
+python main.py
+```
 
 You will enter the interactive shell:
 
-    PyDBQL>>
+```
+PyDBQL>>
+```
 
+---
 
----------------------------------------------------------
-EXAMPLES
----------------------------------------------------------
-# Create and switch to a database
+## 🧪 Examples
+
+### Create and switch to a database
+```
 create :database :college
 checkout :college
+```
 
-# Create a table
+### Create a table
+```
 create :table :students :(id:key int; name:str[20]; age:int)
+```
 
-# Insert data
+### Insert data
+```
 insert :students :(101 ;"Saksham" ;19)
+```
 
-# View table
+### View table
+```
 get :students
+```
 
-# Filter rows
+### Filter rows
+```
 get :students :where :name :is :"Saksham"
+```
 
+---
 
----------------------------------------------------------
-ENCRYPTION
----------------------------------------------------------
-Table metadata and row entries are stored in encrypted form.
-The encryption/decryption functions are in:
-    src/encrypt_decrypt.py
+## 🔐 Encryption
 
+Table metadata and row entries are stored in encrypted form.  
+Encryption/decryption functions live inside:
 
----------------------------------------------------------
-WHY PyDBQL?
----------------------------------------------------------
-• Teaches how databases work internally
-• Demonstrates parsing + encryption + file handling
-• Great portfolio project for students
-• Fully written in Python
+```
+src/encrypt_decrypt.py
+```
 
+---
 
----------------------------------------------------------
-LICENSE
----------------------------------------------------------
-MIT License (optional – can be added on request)
+## 🎯 Why PyDBQL?
+
+- Learn how databases work internally  
+- Custom query parsing + encryption + file handling  
+- Perfect for portfolios and learning system design  
+- Fully written in Python  
+
+---
+
+## 📄 License
+
+MIT License (optional — add if needed)
